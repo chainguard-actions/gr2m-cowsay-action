@@ -1,0 +1,22 @@
+name: Test cowsay with a longer text input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: cowsay
+        uses: .
+        with:
+          text: "The quick brown fox jumps over the lazy dog and then some more words to make it longer"
+      - name: Assert action succeeded with long text
+        env:
+          OUTCOME: ${{ steps.cowsay.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected action to succeed with long text, got '$OUTCOME'"
+            exit 1
+          fi
+          echo "PASS: cowsay action handled long text successfully"
